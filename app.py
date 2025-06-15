@@ -272,4 +272,108 @@ if st.button('Prediksi'):
                              'Curricular_units_1st_sem_enrolled', 'Curricular_units_1st_sem_evaluations',
                              'Curricular_units_1st_sem_approved', 'Curricular_units_1st_sem_grade',
                              'Curricular_units_1st_sem_without_evaluations', 'Curricular_units_2nd_sem_credited',
-                             'Curricular_units_2nd_sem_enrolled', 'Curricular_units]
+                             'Curricular_units_2nd_sem_enrolled', 'Curricular_units_2nd_sem_evaluations',
+                             'Curricular_units_2nd_sem_approved', 'Curricular_units_2nd_sem_grade',
+                             'Curricular_units_2nd_sem_without_evaluations', 'GDP']
+
+    # --- Cara yang lebih aman untuk membangun input_df agar urutannya cocok dengan model_feature_columns ---
+    processed_features_dict = {}
+
+    # Masukkan nilai numerik mentah ke dictionary
+    processed_features_dict['Application_order'] = Application_order
+    processed_features_dict['Previous_qualification_grade'] = Previous_qualification_grade
+    processed_features_dict['Age_at_enrollment'] = Age_at_enrollment
+    processed_features_dict['Admission_grade'] = Admission_grade
+    processed_features_dict['Curricular_units_1st_sem_enrolled'] = Curricular_units_1st_sem_enrolled
+    processed_features_dict['Curricular_units_1st_sem_evaluations'] = Curricular_units_1st_sem_evaluations
+    processed_features_dict['Curricular_units_1st_sem_approved'] = Curricular_units_1st_sem_approved
+    processed_features_dict['Curricular_units_1st_sem_grade'] = Curricular_units_1st_sem_grade
+    processed_features_dict['Curricular_units_1st_sem_without_evaluations'] = Curricular_units_1st_sem_without_evaluations
+    processed_features_dict['Curricular_units_2nd_sem_credited'] = Curricular_units_2nd_sem_credited
+    processed_features_dict['Curricular_units_2nd_sem_enrolled'] = Curricular_units_2nd_sem_enrolled
+    processed_features_dict['Curricular_units_2nd_sem_evaluations'] = Curricular_units_2nd_sem_evaluations
+    processed_features_dict['Curricular_units_2nd_sem_approved'] = Curricular_units_2nd_sem_approved
+    processed_features_dict['Curricular_units_2nd_sem_grade'] = Curricular_units_2nd_sem_grade
+    processed_features_dict['Curricular_units_2nd_sem_without_evaluations'] = Curricular_units_2nd_sem_without_evaluations
+    processed_features_dict['GDP'] = GDP
+
+    # Masukkan nilai kategorikal yang sudah di-encode ke dictionary
+    processed_features_dict['Marital_status'] = marital_status_encoded
+    processed_features_dict['Application_mode'] = application_mode_encoded
+    processed_features_dict['Course'] = course_encoded
+    processed_features_dict['Daytime_evening_attendance'] = daytime_evening_attendance_encoded
+    processed_features_dict['Previous_qualification'] = previous_qualification_encoded
+    processed_features_dict['Mothers_qualification'] = mothers_qualification_encoded
+    processed_features_dict['Fathers_qualification'] = fathers_qualification_encoded
+    processed_features_dict['Mothers_occupation'] = mothers_occupation_encoded
+    processed_features_dict['Fathers_occupation'] = fathers_occupation_encoded
+    processed_features_dict['Displaced'] = displaced_encoded
+    processed_features_dict['Debtor'] = debtor_encoded
+    processed_features_dict['Tuition_fees_up_to_date'] = tuition_fees_encoded
+    processed_features_dict['Gender'] = gender_encoded
+    processed_features_dict['Scholarship_holder'] = scholarship_holder_encoded
+
+
+    # Pisahkan data numerik mentah sesuai urutan untuk scaling
+    numerical_cols_in_order_for_scaling = [
+        'Application_order', 'Previous_qualification_grade', 'Age_at_enrollment',
+        'Admission_grade',
+        'Curricular_units_1st_sem_enrolled', 'Curricular_units_1st_sem_evaluations',
+        'Curricular_units_1st_sem_approved', 'Curricular_units_1st_sem_grade',
+        'Curricular_units_1st_sem_without_evaluations',
+        'Curricular_units_2nd_sem_credited', 'Curricular_units_2nd_sem_enrolled',
+        'Curricular_units_2nd_sem_evaluations',
+        'Curricular_units_2nd_sem_approved', 'Curricular_units_2nd_sem_grade',
+        'Curricular_units_2nd_sem_without_evaluations', 'GDP'
+    ]
+
+    # Ambil nilai numerik mentah dalam urutan scaling
+    numerical_data_for_scaling_values = [processed_features_dict[col] for col in numerical_cols_in_order_for_scaling]
+    numerical_input_df = pd.DataFrame(
+        np.array(numerical_data_for_scaling_values).reshape(1, -1),
+        columns=numerical_cols_in_order_for_scaling # Tambahkan nama kolom di sini
+    )
+    
+    # Scale numerical data (gunakan DataFrame ini)
+    if scaler is not None:
+        scaled_numerical_data = scaler.transform(numerical_input_df.values) # <-- GANTI DENGAN INI (tambah .values)
+    else:
+        scaled_numerical_data = numerical_input_df.values # <-- GANTI DENGAN INI (tambah .values)
+
+    # Buat dictionary akhir untuk DataFrame, dengan nilai numerik yang sudah discale dan kategorikal yang di-encode
+    final_features_for_df = {}
+    idx_numerical = 0
+    for col in model_feature_columns:
+        if col in numerical_cols_in_order_for_scaling: # Cek apakah kolom ini numerik
+            final_features_for_df[col] = scaled_numerical_data[0][idx_numerical]
+            idx_numerical += 1
+        else: # Jika bukan numerik, berarti kategorikal, ambil dari dictionary processed_features_dict
+            final_features_for_df[col] = processed_features_dict[col]
+
+    input_df = pd.DataFrame([final_features_for_df]) # Buat DataFrame dari dictionary
+
+    # --- 7. Make Prediction ---
+    try:
+        prediction = model.predict(input_df) # Gunakan input_df yang sudah benar
+        prediction_proba = model.predict_proba(input_df)
+
+        st.subheader('Prediction Result:')
+        if prediction[0] == 1: # Asumsi 1 = Dropout, 0 = Tidak Dropout
+            st.warning('The student is predicted to **DROP OUT**')
+        else:
+            st.success('The student is predicted **NOT to DROP OUT**')
+
+        st.write(f'Probability of Dropout: **{prediction_proba[0][1]*100:.2f}%**')
+        st.write(f'Probability of Not Dropping Out: **{prediction_proba[0][0]*100:.2f}%**')
+
+        st.write("---")
+        st.info("Note: This prediction is probabilistic and should be used as an indicator. Always consider individual circumstances.")
+
+    except Exception as e:
+        st.error(f"An error occurred during prediction: {e}")
+        st.write("Please ensure all inputs are valid and the model is correctly loaded and configured.")
+
+# --- 8. Optional: Sidebar/Footer Info ---
+st.sidebar.header('About This Application')
+st.sidebar.info('Aplikasi ini dikembangkan sebagai bagian dari proyek Data Science untuk memprediksi performa mahasiswa Jaya Jaya Institut.')
+st.sidebar.write('Developed by Your Name/Team Name') # Replace with your name/team name
