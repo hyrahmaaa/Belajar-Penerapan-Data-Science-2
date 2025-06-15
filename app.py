@@ -156,22 +156,11 @@ with col1:
 
     Daytime_evening_attendance_display = st.selectbox('Attendance Type',list(daytime_evening_attendance_map_rev.keys()),help="Select whether the student attends daytime or evening classes.")
     
-    Previous_qualification_display = st.selectbox(
-        'Previous Qualification',
-        list(previous_qualification_map_rev.keys()),
-        help="Select the student's previous highest academic qualification."
-    )
+    Previous_qualification_display = st.selectbox('Previous Qualification',list(previous_qualification_map_rev.keys()),help="Select the student's previous highest academic qualification.")
     
-    Mothers_qualification_display = st.selectbox(
-        "Mother's Qualification",
-        list(mothers_qualification_map_rev.keys()),
-        help="Select the highest academic qualification of the student's mother."
-    )
+    Mothers_qualification_display = st.selectbox("Mother's Qualification",list(mothers_qualification_map_rev.keys()),help="Select the highest academic qualification of the student's mother.")
 
-    Fathers_qualification_display = st.selectbox(
-        "Father's Qualification",
-        list(fathers_qualification_map_rev.keys()),
-        help="Select the highest academic qualification of the student's father."
+    Fathers_qualification_display = st.selectbox("Father's Qualification",list(fathers_qualification_map_rev.keys()),help="Select the highest academic qualification of the student's father.")
 
 with col2:
     Mothers_occupation_display = st.selectbox(
