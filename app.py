@@ -5,7 +5,7 @@ import numpy as np
 import pickle
 import joblib
 
-# --- 1. Konfigurasi Halaman Streamlit (HARUS PERTAMA!) ---
+# --- 1. Konfigurasi Halaman Streamlit  ---
 st.set_page_config(layout="wide", page_title="Prediksi Performa Mahasiswa")
 
 # --- 2. Judul Aplikasi Streamlit ---
@@ -13,7 +13,6 @@ st.title('Aplikasi Prediksi Performa Mahasiswa Jaya Jaya Institut')
 st.write('Aplikasi ini memprediksi kemungkinan seorang mahasiswa untuk dropout.')
 
 # --- 3. Memuat Model dan Pra-pemrosesan Objects ---
-# Pesan st.success/st.error dipindahkan ke sini setelah st.set_page_config
 try:
     model = joblib.load('student_performance_status.pkl')
     st.success("Machine Learning Model berhasil dimuat!")
@@ -29,7 +28,6 @@ except Exception as e:
     scaler = None # Set scaler ke None jika gagal dimuat
 
 # --- Definisi Mapping untuk Fitur Kategorikal ---
-# Pastikan mapping ini persis kebalikan dari yang Anda lakukan di notebook
 marital_status_map_rev = {
     'Single': 0, 'Married': 1, 'Widower': 2, 'Divorced': 3, 'Facto Union': 4, 'Legally Separated': 5
 }
@@ -143,7 +141,7 @@ tuition_fees_map_rev = {'No': 0, 'Yes': 1}
 gender_map_rev = {'Female': 0, 'Male': 1}
 scholarship_holder_map_rev = {'No': 0, 'Yes': 1}
 
-# --- 4. Input Pengguna (sesuaikan dengan fitur model Anda) ---
+# --- 4. Input Pengguna  ---
 st.header('Masukkan Data Mahasiswa:')
 
 # Menggunakan kolom untuk tata letak yang lebih baik
@@ -154,74 +152,85 @@ with col1:
         'Marital Status',
         list(marital_status_map_rev.keys()),
         help="Select the student's marital status."
-    )
-    Application_mode_display = st.selectbox(
+    )
+
+    Application_mode_display = st.selectbox(
         'Application Mode',
         list(application_mode_map_rev.keys()),
         help="Select the mode of application for admission."
-    )
-    Course_display = st.selectbox(
+    )
+
+    Course_display = st.selectbox(
         'Course',
         list(course_map_rev.keys()),
         help="Select the academic course the student is enrolled in."
-    )
-    Daytime_evening_attendance_display = st.selectbox(
+    )
+
+    Daytime_evening_attendance_display = st.selectbox(
         'Attendance Type',
         list(daytime_evening_attendance_map_rev.keys()),
         help="Select whether the student attends daytime or evening classes."
-    )
-    Previous_qualification_display = st.selectbox(
+    )
+    
+    Previous_qualification_display = st.selectbox(
         'Previous Qualification',
         list(previous_qualification_map_rev.keys()),
         help="Select the student's previous highest academic qualification."
-    )
-    Mothers_qualification_display = st.selectbox(
+    )
+    
+    Mothers_qualification_display = st.selectbox(
         "Mother's Qualification",
         list(mothers_qualification_map_rev.keys()),
         help="Select the highest academic qualification of the student's mother."
-    )
-    Fathers_qualification_display = st.selectbox(
+    )
+
+    Fathers_qualification_display = st.selectbox(
         "Father's Qualification",
         list(fathers_qualification_map_rev.keys()),
         help="Select the highest academic qualification of the student's father."
-    )
 
 with col2:
     Mothers_occupation_display = st.selectbox(
         "Mother's Occupation",
         list(mothers_occupation_map_rev.keys()),
         help="Select the occupation of the student's mother."
-    )
-    Fathers_occupation_display = st.selectbox(
+    )
+
+    Fathers_occupation_display = st.selectbox(
         "Father's Occupation",
         list(fathers_occupation_map_rev.keys()),
         help="Select the occupation of the student's father."
-    )
-    Displaced_display = st.radio(
+    )
+
+    Displaced_display = st.radio(
         'Displaced Student',
         list(displaced_map_rev.keys()),
         help="Is the student displaced (e.g., moved due to external factors)?"
-    )
-    Debtor_display = st.radio(
+    )
+
+    Debtor_display = st.radio(
         'Debtor Status',
         list(debtor_map_rev.keys()),
         help="Is the student a debtor (i.e., has outstanding debts)?"
-    )
-    Tuition_fees_up_to_date_display = st.radio(
+    )
+    
+    Tuition_fees_up_to_date_display = st.radio(
         'Tuition Fees Up-to-Date',
         list(tuition_fees_map_rev.keys()),
         help="Is the student's tuition fee payment up-to-date?"
-    )
-    Gender_display = st.selectbox(
+    )
+
+    Gender_display = st.selectbox(
         'Gender',
         list(gender_map_rev.keys()),
         help="Select the student's gender."
-    )
-    Scholarship_holder_display = st.radio(
+    )
+
+    Scholarship_holder_display = st.radio(
         'Scholarship Holder',
         list(scholarship_holder_map_rev.keys()),
         help="Is the student a scholarship holder?"
-    )
+    )
 
 with col3:
     Age_at_enrollment = st.number_input('Age at Enrollment', min_value=17, max_value=80, value=20, help="Student's age when first enrolling.")
@@ -245,7 +254,6 @@ with col3:
 # --- 5. Tombol Prediksi ---
 if st.button('Prediksi'):
     # --- 6. Pra-pemrosesan Input untuk Model ---
-    # Encode categorical features
     marital_status_encoded = marital_status_map_rev[Marital_status_display]
     application_mode_encoded = application_mode_map_rev[Application_mode_display]
     course_encoded = course_map_rev[Course_display]
@@ -262,8 +270,6 @@ if st.button('Prediksi'):
     scholarship_holder_encoded = scholarship_holder_map_rev[Scholarship_holder_display]
 
     # Define the exact order of features your model expects
-    # YOU MUST REPLACE THIS LIST WITH THE ACTUAL COLUMN NAMES AND THEIR EXACT ORDER FROM YOUR X_train_scaled.columns.tolist()
-    # THIS IS THE MOST CRITICAL PART FOR YOUR MODEL TO WORK CORRECTLY.
     model_feature_columns = ['Marital_status', 'Application_mode', 'Application_order', 'Course',
                              'Daytime_evening_attendance', 'Previous_qualification', 'Previous_qualification_grade',
                              'Mothers_qualification', 'Fathers_qualification', 'Mothers_occupation',
@@ -276,14 +282,12 @@ if st.button('Prediksi'):
                              'Curricular_units_2nd_sem_approved', 'Curricular_units_2nd_sem_grade',
                              'Curricular_units_2nd_sem_without_evaluations', 'GDP']
 
-    # --- Cara yang lebih aman untuk membangun input_df agar urutannya cocok dengan model_feature_columns ---
-    processed_features_dict = {}
+    processed_features_dict = {}
 
-    # Masukkan nilai numerik mentah ke dictionary
     processed_features_dict['Application_order'] = Application_order
     processed_features_dict['Previous_qualification_grade'] = Previous_qualification_grade
     processed_features_dict['Age_at_enrollment'] = Age_at_enrollment
-    processed_features_dict['Admission_grade'] = Admission_grade # Tambahkan ini
+    processed_features_dict['Admission_grade'] = Admission_grade 
     processed_features_dict['Curricular_units_1st_sem_enrolled'] = Curricular_units_1st_sem_enrolled
     processed_features_dict['Curricular_units_1st_sem_evaluations'] = Curricular_units_1st_sem_evaluations
     processed_features_dict['Curricular_units_1st_sem_approved'] = Curricular_units_1st_sem_approved
@@ -297,7 +301,6 @@ if st.button('Prediksi'):
     processed_features_dict['Curricular_units_2nd_sem_without_evaluations'] = Curricular_units_2nd_sem_without_evaluations
     processed_features_dict['GDP'] = GDP
 
-    # Masukkan nilai kategorikal yang sudah di-encode ke dictionary
     processed_features_dict['Marital_status'] = marital_status_encoded
     processed_features_dict['Application_mode'] = application_mode_encoded
     processed_features_dict['Course'] = course_encoded
@@ -314,7 +317,6 @@ if st.button('Prediksi'):
     processed_features_dict['Scholarship_holder'] = scholarship_holder_encoded
 
 
-    # Pisahkan data numerik mentah sesuai urutan untuk scaling
     numerical_cols_in_order_for_scaling = [
         'Application_order', 'Previous_qualification_grade', 'Age_at_enrollment',
         'Admission_grade',
@@ -325,46 +327,37 @@ if st.button('Prediksi'):
         'Curricular_units_2nd_sem_evaluations',
         'Curricular_units_2nd_sem_approved', 'Curricular_units_2nd_sem_grade',
         'Curricular_units_2nd_sem_without_evaluations', 'GDP'
-    ]
+    ]
 
-    # Ambil nilai numerik mentah dalam urutan scaling
     numerical_data_for_scaling_values = [processed_features_dict[col] for col in numerical_cols_in_order_for_scaling]
     numerical_input_df = pd.DataFrame(
         np.array(numerical_data_for_scaling_values).reshape(1, -1),
         columns=numerical_cols_in_order_for_scaling # Tambahkan nama kolom di sini
     )
-    
-    # Scale numerical data (gunakan DataFrame ini)
-    if scaler is not None:
-        # scaled_numerical_data = scaler.transform(np.array(numerical_data_for_scaling).reshape(1, -1)) # <--- HAPUS BARIS INI
-        scaled_numerical_data = scaler.transform(numerical_input_df.values) # <--- GANTI DENGAN INI (tambah .values)
-    else:
-        # Jika tidak ada scaler, gunakan DataFrame mentah
-        # scaled_numerical_data = np.array(numerical_data_for_scaling).reshape(1, -1) # <--- HAPUS BARIS INI
-        scaled_numerical_data = numerical_input_df.values # <--- GANTI DENGAN INI (tambah .values)
 
-    # Buat dictionary akhir untuk DataFrame, dengan nilai numerik yang sudah discale dan kategorikal yang di-encode
-    final_features_for_df = {}
+    if scaler is not None:
+        scaled_numerical_data = scaler.transform(numerical_input_df.values) # <--- GANTI DENGAN INI (tambah .values)
+    else:
+        scaled_numerical_data = numerical_input_df.values # <--- GANTI DENGAN INI (tambah .values)
+
+    final_features_for_df = {}
     idx_numerical = 0
     for col in model_feature_columns:
-        if col in numerical_cols_in_order_for_scaling: # Cek apakah kolom ini numerik
+        if col in numerical_cols_in_order_for_scaling: 
             final_features_for_df[col] = scaled_numerical_data[0][idx_numerical]
             idx_numerical += 1
-        else: # Jika bukan numerik, berarti kategorikal, ambil dari dictionary processed_features_dict
+        else: 
             final_features_for_df[col] = processed_features_dict[col]
 
-    input_df = pd.DataFrame([final_features_for_df]) # Buat DataFrame dari dictionary
-
-    # st.write("Input Data for Model (for debugging):")
-    # st.dataframe(input_df)
+    input_df = pd.DataFrame([final_features_for_df]) 
 
     # --- 6. Make Prediction ---
     try:
-        prediction = model.predict(input_df) # Gunakan input_df yang sudah benar
+        prediction = model.predict(input_df) 
         prediction_proba = model.predict_proba(input_df)
 
         st.subheader('Prediction Result:')
-        if prediction[0] == 1: # Asumsi 1 = Dropout, 0 = Tidak Dropout
+        if prediction[0] == 1: 
             st.warning('The student is predicted to **DROP OUT**')
         else:
             st.success('The student is predicted **NOT to DROP OUT**')
@@ -382,4 +375,4 @@ if st.button('Prediksi'):
 # --- 7. Optional: Sidebar/Footer Info ---
 st.sidebar.header('About This Application')
 st.sidebar.info('Aplikasi ini dikembangkan sebagai bagian dari proyek Data Science untuk memprediksi performa mahasiswa Jaya Jaya Institut.')
-st.sidebar.write('Developed by Your Name/Team Name') # Replace with your name/team name
+st.sidebar.write('Developed by Rahayunr') 
