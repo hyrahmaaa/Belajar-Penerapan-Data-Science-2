@@ -62,12 +62,51 @@ Proyek ini dikembangkan menggunakan Python dan disarankan untuk dijalankan dalam
 Dashboard ini dirancang untuk menyajikan wawasan mendalam mengenai status dropout mahasiswa. Dengan menampilkan metrik utama, tren, dan perbandingan berdasarkan beragam faktor pemicu yang teridentifikasi dari analisis, dashboard ini bertujuan membantu pihak institut dalam mengidentifikasi area fokus strategis untuk meningkatkan motivasi dan keberhasilan studi mahasiswa.
 
 🔗 URL : https://lookerstudio.google.com/reporting/e66c86a8-4304-4c63-9834-e10ab8286407
+![Student_Performance_Jaya_Jaya_Institut_page-0001](https://github.com/user-attachments/assets/bd6308af-b27d-4ba7-8304-20a4558c3f17)
+
+![Student_Performance_Jaya_Jaya_Institut_page-0002](https://github.com/user-attachments/assets/1a915f71-7ccc-4d94-b97f-5afcb09ea6e5)
+
+## Menjalankan Prototype Sistem Machine Learning
+
+![image](https://github.com/user-attachments/assets/f137f221-ad5c-4f36-85d2-585c2a8c8a70)
+
+Prototype ini digunakan dengan cara meninput manual. Adapun cara menjalankannya terbagi menjadi dua yaitu secara lokal dan online.
+
+Adapun secara lokal adalah:
+1.  **Clone Repositori:**
+    Buka terminal atau Command Prompt, lalu *clone* repositori ini:
+    ```bash
+    git clone [https://github.com/hyrahmaaa/Belajar-Penerapan-Data-Science-2.git]  (https://github.com/hyrahmaaa/Belajar-Penerapan-Data-Science-2.git)
+    cd Belajar-Penerapan-Data-Science-2
+    ```
+2.  **Buat dan Aktifkan Virtual Environment:**
+    * **Untuk Windows:**
+        ```bash
+        python -m venv env
+        .\env\Scripts\activate
+        ```
+    * **Untuk macOS/Linux:**
+        ```bash
+        python3 -m venv env
+        source env/bin/activate
+        ```
+3.  **Instal Dependensi:**
+    Instal semua pustaka yang diperlukan dari `requirements.txt`:
+    ```bash
+    pip install -r requirements.txt
+    ```
+4.  **Jalankan Aplikasi Streamlit:**
+    ```bash
+    streamlit run app.py
+    ```
+
+Untuk dapat menjalankan secara online dapat dilakukan dilink berikut : 
+
+https://belajar-penerapan-data-science-2-k3qcucda6rwy5bq62uz2hx.streamlit.app/
 
 ## Conclusion
 
 Proyek ini berhasil melakukan analisis komprehensif terhadap data performa mahasiswa Jaya Jaya Institut. Melalui eksplorasi data dan penerapan uji statistik (seperti Chi-square dan t-test), proyek berhasil mengidentifikasi dan mengungkap korelasi serta perbedaan signifikan antara berbagai karakteristik mahasiswa dengan status putus kuliah.
-
-https://belajar-penerapan-data-science-2-k3qcucda6rwy5bq62uz2hx.streamlit.app/
 
 Adapun karakteristik umum mahasiswa yang berstatus dropout:
 A. Profil Demografi & Latar Belakang:
