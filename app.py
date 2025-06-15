@@ -2,10 +2,11 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
+import joblib
 
 # --- 1. Load Model and Pre-processing Objects ---
 try:
-    model = pickle.load(open('student_performance_status.pkl', 'rb'))
+    model = joblib.load(open('student_performance_status.pkl', 'rb')) # <-- GANTI DARI pickle.load MENJADI joblib.load
     st.success("Machine Learning Model loaded successfully!")
 except Exception as e:
     st.error(f"Error loading ML Model: {e}. Make sure 'student_performance_status.pkl' is in the correct directory.")
