@@ -67,6 +67,8 @@ Dashboard ini dirancang untuk menyajikan wawasan mendalam mengenai status dropou
 
 Proyek ini berhasil melakukan analisis komprehensif terhadap data performa mahasiswa Jaya Jaya Institut. Melalui eksplorasi data dan penerapan uji statistik (seperti Chi-square dan t-test), proyek berhasil mengidentifikasi dan mengungkap korelasi serta perbedaan signifikan antara berbagai karakteristik mahasiswa dengan status putus kuliah.
 
+https://belajar-penerapan-data-science-2-k3qcucda6rwy5bq62uz2hx.streamlit.app/
+
 Adapun karakteristik umum mahasiswa yang berstatus dropout:
 A. Profil Demografi & Latar Belakang:
 - Usia & Nilai Awal: Mahasiswa yang dropout memiliki rata-rata usia saat pendaftaran 26.07 tahun. Nilai kualifikasi sebelumnya rata-rata 131.09, dan nilai masuk rata-rata 124.67. Ini menunjukkan dropout tidak hanya terjadi pada mahasiswa sangat muda atau dengan nilai akademik rendah di awal.
