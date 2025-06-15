@@ -376,3 +376,4 @@ if st.button('Prediksi'):
 st.sidebar.header('About This Application')
 st.sidebar.info('Aplikasi ini dikembangkan sebagai bagian dari proyek Data Science untuk memprediksi performa mahasiswa Jaya Jaya Institut.')
 st.sidebar.write('Developed by Rahayunr') 
+ 
