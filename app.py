@@ -150,23 +150,11 @@ col1, col2, col3 = st.columns(3)
 with col1:
     Marital_status_display = st.selectbox('Marital Status',list(marital_status_map_rev.keys()),help="Select the student's marital status.")
 
-    Application_mode_display = st.selectbox(
-        'Application Mode',
-        list(application_mode_map_rev.keys()),
-        help="Select the mode of application for admission."
-    )
+    Application_mode_display = st.selectbox('Application Mode',list(application_mode_map_rev.keys()),help="Select the mode of application for admission.")
 
-    Course_display = st.selectbox(
-        'Course',
-        list(course_map_rev.keys()),
-        help="Select the academic course the student is enrolled in."
-    )
+    Course_display = st.selectbox('Course',list(course_map_rev.keys()),help="Select the academic course the student is enrolled in.")
 
-    Daytime_evening_attendance_display = st.selectbox(
-        'Attendance Type',
-        list(daytime_evening_attendance_map_rev.keys()),
-        help="Select whether the student attends daytime or evening classes."
-    )
+    Daytime_evening_attendance_display = st.selectbox('Attendance Type',list(daytime_evening_attendance_map_rev.keys()),help="Select whether the student attends daytime or evening classes.")
     
     Previous_qualification_display = st.selectbox(
         'Previous Qualification',
