@@ -148,10 +148,7 @@ st.header('Masukkan Data Mahasiswa:')
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    Marital_status_display = st.selectbox('Marital Status',
-        list(marital_status_map_rev.keys()),
-        help="Select the student's marital status."
-    )
+    Marital_status_display = st.selectbox('Marital Status',list(marital_status_map_rev.keys()),help="Select the student's marital status.")
 
     Application_mode_display = st.selectbox(
         'Application Mode',
