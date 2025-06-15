@@ -5,25 +5,30 @@ import numpy as np
 import pickle
 import joblib
 
-# --- 1. Judul Aplikasi Streamlit ---
-st.set_page_config(layout="wide")
+# --- 1. Konfigurasi Halaman Streamlit (HARUS PERTAMA!) ---
+st.set_page_config(layout="wide", page_title="Prediksi Performa Mahasiswa")
+
+# --- 2. Judul Aplikasi Streamlit ---
 st.title('Aplikasi Prediksi Performa Mahasiswa Jaya Jaya Institut')
 st.write('Aplikasi ini memprediksi kemungkinan seorang mahasiswa untuk dropout.')
 
-# --- 2. Load Model and Pre-processing Objects ---
+# --- 3. Memuat Model dan Pra-pemrosesan Objects ---
+# Pesan st.success/st.error dipindahkan ke sini setelah st.set_page_config
 try:
     model = joblib.load('student_performance_status.pkl')
+    st.success("Machine Learning Model berhasil dimuat!")
 except Exception as e:
-    st.error(f"Error loading ML Model: {e}. Make sure 'student_performance_status.pkl' is in the correct directory.")
+    st.error(f"Error memuat Model ML: {e}. Pastikan 'student_performance_status.pkl' ada di direktori yang benar.")
     st.stop()
 
 try:
     scaler = pickle.load(open('scaler.pkl', 'rb'))
+    st.success("Scaler berhasil dimuat!")
 except Exception as e:
-    st.warning(f"Warning: Failed to load scaler: {e}. If your model requires numerical scaling, this will cause issues. Make sure 'scaler.pkl' is in the correct directory.")
-    scaler = None # Set scaler to None if loading fails
+    st.warning(f"Peringatan: Gagal memuat scaler: {e}. Jika model Anda memerlukan scaling, ini akan menyebabkan masalah. Pastikan 'scaler.pkl' ada di direktori yang benar.")
+    scaler = None # Set scaler ke None jika gagal dimuat
 
-# --- Definisi Mapping untuk Fitur Kategorikal (Pindahkan ke Sini!) ---
+# --- Definisi Mapping untuk Fitur Kategorikal ---
 # Pastikan mapping ini persis kebalikan dari yang Anda lakukan di notebook
 marital_status_map_rev = {
     'Single': 0, 'Married': 1, 'Widower': 2, 'Divorced': 3, 'Facto Union': 4, 'Legally Separated': 5
@@ -138,243 +143,243 @@ tuition_fees_map_rev = {'No': 0, 'Yes': 1}
 gender_map_rev = {'Female': 0, 'Male': 1}
 scholarship_holder_map_rev = {'No': 0, 'Yes': 1}
 
-# --- 3. Input Pengguna (sesuaikan dengan fitur model Anda) ---
+# --- 4. Input Pengguna (sesuaikan dengan fitur model Anda) ---
 st.header('Masukkan Data Mahasiswa:')
 
 # Menggunakan kolom untuk tata letak yang lebih baik
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    Marital_status_display = st.selectbox(
-        'Marital Status',
-        list(marital_status_map_rev.keys()),
-        help="Select the student's marital status."
-    )
-    Application_mode_display = st.selectbox(
-        'Application Mode',
-        list(application_mode_map_rev.keys()),
-        help="Select the mode of application for admission."
-    )
-    Course_display = st.selectbox(
-        'Course',
-        list(course_map_rev.keys()),
-        help="Select the academic course the student is enrolled in."
-    )
-    Daytime_evening_attendance_display = st.selectbox(
-        'Attendance Type',
-        list(daytime_evening_attendance_map_rev.keys()),
-        help="Select whether the student attends daytime or evening classes."
-    )
-    Previous_qualification_display = st.selectbox(
-        'Previous Qualification',
-        list(previous_qualification_map_rev.keys()),
-        help="Select the student's previous highest academic qualification."
-    )
-    Mothers_qualification_display = st.selectbox(
-        "Mother's Qualification",
-        list(mothers_qualification_map_rev.keys()),
-        help="Select the highest academic qualification of the student's mother."
-    )
-    Fathers_qualification_display = st.selectbox(
-        "Father's Qualification",
-        list(fathers_qualification_map_rev.keys()),
-        help="Select the highest academic qualification of the student's father."
-    )
+    Marital_status_display = st.selectbox(
+        'Marital Status',
+        list(marital_status_map_rev.keys()),
+        help="Select the student's marital status."
+    )
+    Application_mode_display = st.selectbox(
+        'Application Mode',
+        list(application_mode_map_rev.keys()),
+        help="Select the mode of application for admission."
+    )
+    Course_display = st.selectbox(
+        'Course',
+        list(course_map_rev.keys()),
+        help="Select the academic course the student is enrolled in."
+    )
+    Daytime_evening_attendance_display = st.selectbox(
+        'Attendance Type',
+        list(daytime_evening_attendance_map_rev.keys()),
+        help="Select whether the student attends daytime or evening classes."
+    )
+    Previous_qualification_display = st.selectbox(
+        'Previous Qualification',
+        list(previous_qualification_map_rev.keys()),
+        help="Select the student's previous highest academic qualification."
+    )
+    Mothers_qualification_display = st.selectbox(
+        "Mother's Qualification",
+        list(mothers_qualification_map_rev.keys()),
+        help="Select the highest academic qualification of the student's mother."
+    )
+    Fathers_qualification_display = st.selectbox(
+        "Father's Qualification",
+        list(fathers_qualification_map_rev.keys()),
+        help="Select the highest academic qualification of the student's father."
+    )
 
 with col2:
-    Mothers_occupation_display = st.selectbox(
-        "Mother's Occupation",
-        list(mothers_occupation_map_rev.keys()),
-        help="Select the occupation of the student's mother."
-    )
-    Fathers_occupation_display = st.selectbox(
-        "Father's Occupation",
-        list(fathers_occupation_map_rev.keys()),
-        help="Select the occupation of the student's father."
-    )
-    Displaced_display = st.radio(
-        'Displaced Student',
-        list(displaced_map_rev.keys()),
-        help="Is the student displaced (e.g., moved due to external factors)?"
-    )
-    Debtor_display = st.radio(
-        'Debtor Status',
-        list(debtor_map_rev.keys()),
-        help="Is the student a debtor (i.e., has outstanding debts)?"
-    )
-    Tuition_fees_up_to_date_display = st.radio(
-        'Tuition Fees Up-to-Date',
-        list(tuition_fees_map_rev.keys()),
-        help="Is the student's tuition fee payment up-to-date?"
-    )
-    Gender_display = st.selectbox(
-        'Gender',
-        list(gender_map_rev.keys()),
-        help="Select the student's gender."
-    )
-    Scholarship_holder_display = st.radio(
-        'Scholarship Holder',
-        list(scholarship_holder_map_rev.keys()),
-        help="Is the student a scholarship holder?"
-    )
+    Mothers_occupation_display = st.selectbox(
+        "Mother's Occupation",
+        list(mothers_occupation_map_rev.keys()),
+        help="Select the occupation of the student's mother."
+    )
+    Fathers_occupation_display = st.selectbox(
+        "Father's Occupation",
+        list(fathers_occupation_map_rev.keys()),
+        help="Select the occupation of the student's father."
+    )
+    Displaced_display = st.radio(
+        'Displaced Student',
+        list(displaced_map_rev.keys()),
+        help="Is the student displaced (e.g., moved due to external factors)?"
+    )
+    Debtor_display = st.radio(
+        'Debtor Status',
+        list(debtor_map_rev.keys()),
+        help="Is the student a debtor (i.e., has outstanding debts)?"
+    )
+    Tuition_fees_up_to_date_display = st.radio(
+        'Tuition Fees Up-to-Date',
+        list(tuition_fees_map_rev.keys()),
+        help="Is the student's tuition fee payment up-to-date?"
+    )
+    Gender_display = st.selectbox(
+        'Gender',
+        list(gender_map_rev.keys()),
+        help="Select the student's gender."
+    )
+    Scholarship_holder_display = st.radio(
+        'Scholarship Holder',
+        list(scholarship_holder_map_rev.keys()),
+        help="Is the student a scholarship holder?"
+    )
 
 with col3:
-    Age_at_enrollment = st.number_input('Age at Enrollment', min_value=17, max_value=80, value=20, help="Student's age when first enrolling.")
-    Admission_grade = st.number_input('Admission Grade Average', min_value=0.0, max_value=200.0, value=127.0, help="Average grade from admission exams/criteria.")
-    Previous_qualification_grade = st.number_input('Previous Qualification Grade Average', min_value=0.0, max_value=200.0, value=122.0, help="Average grade from previous academic qualification.")
-    GDP = st.number_input('GDP per capita (year of enrollment)', min_value=-10.0, max_value=20.0, value=1.0, format="%.2f", help="Gross Domestic Product per capita of the student's origin country at enrollment year.")
-    Application_order = st.number_input('Application Order', min_value=1, max_value=10, value=5, help="Order of the student's application (e.g., 1st, 2nd, etc.).")
-    Curricular_units_1st_sem_enrolled = st.number_input('1st Sem Units Enrolled', min_value=0, max_value=50, value=0, help="Number of curricular units enrolled in the 1st semester.")
-    Curricular_units_1st_sem_evaluations = st.number_input('1st Sem Evaluations', min_value=0, max_value=50, value=0, help="Number of evaluations in the 1st semester.")
-    Curricular_units_1st_sem_approved = st.number_input('1st Sem Units Approved', min_value=0, max_value=50, value=0, help="Number of curricular units approved in the 1st semester.")
-    Curricular_units_1st_sem_grade = st.slider('1st Sem Grade Average', min_value=0.0, max_value=20.0, value=0.0, step=0.1, help="Average grade of curricular units in the 1st semester.")
-    Curricular_units_1st_sem_without_evaluations = st.number_input('1st Sem Units without Evaluations', min_value=0, max_value=50, value=0, help="Number of curricular units without evaluations in the 1st semester.")
-    Curricular_units_2nd_sem_credited = st.number_input('2nd Sem Units Credited', min_value=0, max_value=50, value=0, help="Number of curricular units credited in the 2nd semester.")
-    Curricular_units_2nd_sem_enrolled = st.number_input('2nd Sem Units Enrolled', min_value=0, max_value=50, value=0, help="Number of curricular units enrolled in the 2nd semester.")
-    Curricular_units_2nd_sem_evaluations = st.number_input('2nd Sem Evaluations', min_value=0, max_value=50, value=0, help="Number of evaluations in the 2nd semester.")
-    Curricular_units_2nd_sem_approved = st.number_input('2nd Sem Units Approved', min_value=0, max_value=50, value=0, help="Number of curricular units approved in the 2nd semester.")
-    Curricular_units_2nd_sem_grade = st.slider('2nd Sem Grade Average', min_value=0.0, max_value=20.0, value=0.0, step=0.1, help="Average grade of curricular units in the 2nd semester.")
-    Curricular_units_2nd_sem_without_evaluations = st.number_input('2nd Sem Units without Evaluations', min_value=0, max_value=50, value=0, help="Number of curricular units without evaluations in the 2nd semester.")
+    Age_at_enrollment = st.number_input('Age at Enrollment', min_value=17, max_value=80, value=20, help="Student's age when first enrolling.")
+    Admission_grade = st.number_input('Admission Grade', min_value=0.0, max_value=200.0, value=127.0, help="Student's admission grade.")
+    Previous_qualification_grade = st.number_input('Previous Qualification Grade', min_value=0.0, max_value=200.0, value=122.0, help="Student's previous qualification grade.")
+    GDP = st.number_input('GDP per capita (year of enrollment)', min_value=-10.0, max_value=20.0, value=1.0, format="%.2f", help="Gross Domestic Product per capita of the student's origin country at enrollment year.")
+    Application_order = st.number_input('Application Order', min_value=1, max_value=10, value=5, help="Order of the student's application (e.g., 1st, 2nd, etc.).")
+    Curricular_units_1st_sem_enrolled = st.number_input('1st Sem Units Enrolled', min_value=0, max_value=50, value=0, help="Number of curricular units enrolled in the 1st semester.")
+    Curricular_units_1st_sem_evaluations = st.number_input('1st Sem Evaluations', min_value=0, max_value=50, value=0, help="Number of evaluations in the 1st semester.")
+    Curricular_units_1st_sem_approved = st.number_input('1st Sem Units Approved', min_value=0, max_value=50, value=0, help="Number of curricular units approved in the 1st semester.")
+    Curricular_units_1st_sem_grade = st.slider('1st Sem Grade', min_value=0.0, max_value=20.0, value=0.0, step=0.1, help="Grade of curricular units in the 1st semester.")
+    Curricular_units_1st_sem_without_evaluations = st.number_input('1st Sem Units without Evaluations', min_value=0, max_value=50, value=0, help="Number of curricular units without evaluations in the 1st semester.")
+    Curricular_units_2nd_sem_credited = st.number_input('2nd Sem Units Credited', min_value=0, max_value=50, value=0, help="Number of curricular units credited in the 2nd semester.")
+    Curricular_units_2nd_sem_enrolled = st.number_input('2nd Sem Units Enrolled', min_value=0, max_value=50, value=0, help="Number of curricular units enrolled in the 2nd semester.")
+    Curricular_units_2nd_sem_evaluations = st.number_input('2nd Sem Evaluations', min_value=0, max_value=50, value=0, help="Number of evaluations in the 2nd semester.")
+    Curricular_units_2nd_sem_approved = st.number_input('2nd Sem Units Approved', min_value=0, max_value=50, value=0, help="Number of curricular units approved in the 2nd semester.")
+    Curricular_units_2nd_sem_grade = st.slider('2nd Sem Grade', min_value=0.0, max_value=20.0, value=0.0, step=0.1, help="Grade of curricular units in the 2nd semester.")
+    Curricular_units_2nd_sem_without_evaluations = st.number_input('2nd Sem Units without Evaluations', min_value=0, max_value=50, value=0, help="Number of curricular units without evaluations in the 2nd semester.")
 
 
-# --- 4. Tombol Prediksi ---
+# --- 5. Tombol Prediksi ---
 if st.button('Prediksi'):
-    # --- 5. Pra-pemrosesan Input untuk Model ---
-    # Encode categorical features
-    marital_status_encoded = marital_status_map_rev[Marital_status_display]
-    application_mode_encoded = application_mode_map_rev[Application_mode_display]
-    course_encoded = course_map_rev[Course_display]
-    daytime_evening_attendance_encoded = daytime_evening_attendance_map_rev[Daytime_evening_attendance_display]
-    previous_qualification_encoded = previous_qualification_map_rev[Previous_qualification_display]
-    mothers_qualification_encoded = mothers_qualification_map_rev[Mothers_qualification_display]
-    fathers_qualification_encoded = fathers_qualification_map_rev[Fathers_qualification_display]
-    mothers_occupation_encoded = mothers_occupation_map_rev[Mothers_occupation_display]
-    fathers_occupation_encoded = fathers_occupation_map_rev[Fathers_occupation_display]
-    displaced_encoded = displaced_map_rev[Displaced_display]
-    debtor_encoded = debtor_map_rev[Debtor_display]
-    tuition_fees_encoded = tuition_fees_map_rev[Tuition_fees_up_to_date_display]
-    gender_encoded = gender_map_rev[Gender_display]
-    scholarship_holder_encoded = scholarship_holder_map_rev[Scholarship_holder_display]
+    # --- 6. Pra-pemrosesan Input untuk Model ---
+    # Encode categorical features
+    marital_status_encoded = marital_status_map_rev[Marital_status_display]
+    application_mode_encoded = application_mode_map_rev[Application_mode_display]
+    course_encoded = course_map_rev[Course_display]
+    daytime_evening_attendance_encoded = daytime_evening_attendance_map_rev[Daytime_evening_attendance_display]
+    previous_qualification_encoded = previous_qualification_map_rev[Previous_qualification_display]
+    mothers_qualification_encoded = mothers_qualification_map_rev[Mothers_qualification_display]
+    fathers_qualification_encoded = fathers_qualification_map_rev[Fathers_qualification_display]
+    mothers_occupation_encoded = mothers_occupation_map_rev[Mothers_occupation_display]
+    fathers_occupation_encoded = fathers_occupation_map_rev[Fathers_occupation_display]
+    displaced_encoded = displaced_map_rev[Displaced_display]
+    debtor_encoded = debtor_map_rev[Debtor_display]
+    tuition_fees_encoded = tuition_fees_map_rev[Tuition_fees_up_to_date_display]
+    gender_encoded = gender_map_rev[Gender_display]
+    scholarship_holder_encoded = scholarship_holder_map_rev[Scholarship_holder_display]
 
-    # Define the exact order of features your model expects
-    # YOU MUST REPLACE THIS LIST WITH THE ACTUAL COLUMN NAMES AND THEIR EXACT ORDER FROM YOUR X_train_scaled.columns.tolist()
-    # THIS IS THE MOST CRITICAL PART FOR YOUR MODEL TO WORK CORRECTLY.
-    model_feature_columns = ['Marital_status', 'Application_mode', 'Application_order', 'Course',
-                             'Daytime_evening_attendance', 'Previous_qualification', 'Previous_qualification_grade',
-                             'Mothers_qualification', 'Fathers_qualification', 'Mothers_occupation',
-                             'Fathers_occupation', 'Admission_grade', 'Displaced', 'Debtor',
-                             'Tuition_fees_up_to_date', 'Gender', 'Scholarship_holder', 'Age_at_enrollment',
-                             'Curricular_units_1st_sem_enrolled', 'Curricular_units_1st_sem_evaluations',
-                             'Curricular_units_1st_sem_approved', 'Curricular_units_1st_sem_grade',
-                             'Curricular_units_1st_sem_without_evaluations', 'Curricular_units_2nd_sem_credited',
-                             'Curricular_units_2nd_sem_enrolled', 'Curricular_units_2nd_sem_evaluations',
-                             'Curricular_units_2nd_sem_approved', 'Curricular_units_2nd_sem_grade',
-                             'Curricular_units_2nd_sem_without_evaluations', 'GDP']
+    # Define the exact order of features your model expects
+    # YOU MUST REPLACE THIS LIST WITH THE ACTUAL COLUMN NAMES AND THEIR EXACT ORDER FROM YOUR X_train_scaled.columns.tolist()
+    # THIS IS THE MOST CRITICAL PART FOR YOUR MODEL TO WORK CORRECTLY.
+    model_feature_columns = ['Marital_status', 'Application_mode', 'Application_order', 'Course',
+                             'Daytime_evening_attendance', 'Previous_qualification', 'Previous_qualification_grade',
+                             'Mothers_qualification', 'Fathers_qualification', 'Mothers_occupation',
+                             'Fathers_occupation', 'Admission_grade', 'Displaced', 'Debtor',
+                             'Tuition_fees_up_to_date', 'Gender', 'Scholarship_holder', 'Age_at_enrollment',
+                             'Curricular_units_1st_sem_enrolled', 'Curricular_units_1st_sem_evaluations',
+                             'Curricular_units_1st_sem_approved', 'Curricular_units_1st_sem_grade',
+                             'Curricular_units_1st_sem_without_evaluations', 'Curricular_units_2nd_sem_credited',
+                             'Curricular_units_2nd_sem_enrolled', 'Curricular_units_2nd_sem_evaluations',
+                             'Curricular_units_2nd_sem_approved', 'Curricular_units_2nd_sem_grade',
+                             'Curricular_units_2nd_sem_without_evaluations', 'GDP']
 
-    # --- Cara yang lebih aman untuk membangun input_df agar urutannya cocok dengan model_feature_columns ---
-    processed_features_dict = {}
+    # --- Cara yang lebih aman untuk membangun input_df agar urutannya cocok dengan model_feature_columns ---
+    processed_features_dict = {}
 
-    # Masukkan nilai numerik mentah ke dictionary
-    processed_features_dict['Application_order'] = Application_order
-    processed_features_dict['Previous_qualification_grade'] = Previous_qualification_grade
-    processed_features_dict['Age_at_enrollment'] = Age_at_enrollment
-    processed_features_dict['Admission_grade'] = Admission_grade # Tambahkan ini
-    processed_features_dict['Curricular_units_1st_sem_enrolled'] = Curricular_units_1st_sem_enrolled
-    processed_features_dict['Curricular_units_1st_sem_evaluations'] = Curricular_units_1st_sem_evaluations
-    processed_features_dict['Curricular_units_1st_sem_approved'] = Curricular_units_1st_sem_approved
-    processed_features_dict['Curricular_units_1st_sem_grade'] = Curricular_units_1st_sem_grade
-    processed_features_dict['Curricular_units_1st_sem_without_evaluations'] = Curricular_units_1st_sem_without_evaluations
-    processed_features_dict['Curricular_units_2nd_sem_credited'] = Curricular_units_2nd_sem_credited
-    processed_features_dict['Curricular_units_2nd_sem_enrolled'] = Curricular_units_2nd_sem_enrolled
-    processed_features_dict['Curricular_units_2nd_sem_evaluations'] = Curricular_units_2nd_sem_evaluations
-    processed_features_dict['Curricular_units_2nd_sem_approved'] = Curricular_units_2nd_sem_approved
-    processed_features_dict['Curricular_units_2nd_sem_grade'] = Curricular_units_2nd_sem_grade
-    processed_features_dict['Curricular_units_2nd_sem_without_evaluations'] = Curricular_units_2nd_sem_without_evaluations
-    processed_features_dict['GDP'] = GDP
+    # Masukkan nilai numerik mentah ke dictionary
+    processed_features_dict['Application_order'] = Application_order
+    processed_features_dict['Previous_qualification_grade'] = Previous_qualification_grade
+    processed_features_dict['Age_at_enrollment'] = Age_at_enrollment
+    processed_features_dict['Admission_grade'] = Admission_grade # Tambahkan ini
+    processed_features_dict['Curricular_units_1st_sem_enrolled'] = Curricular_units_1st_sem_enrolled
+    processed_features_dict['Curricular_units_1st_sem_evaluations'] = Curricular_units_1st_sem_evaluations
+    processed_features_dict['Curricular_units_1st_sem_approved'] = Curricular_units_1st_sem_approved
+    processed_features_dict['Curricular_units_1st_sem_grade'] = Curricular_units_1st_sem_grade
+    processed_features_dict['Curricular_units_1st_sem_without_evaluations'] = Curricular_units_1st_sem_without_evaluations
+    processed_features_dict['Curricular_units_2nd_sem_credited'] = Curricular_units_2nd_sem_credited
+    processed_features_dict['Curricular_units_2nd_sem_enrolled'] = Curricular_units_2nd_sem_enrolled
+    processed_features_dict['Curricular_units_2nd_sem_evaluations'] = Curricular_units_2nd_sem_evaluations
+    processed_features_dict['Curricular_units_2nd_sem_approved'] = Curricular_units_2nd_sem_approved
+    processed_features_dict['Curricular_units_2nd_sem_grade'] = Curricular_units_2nd_sem_grade
+    processed_features_dict['Curricular_units_2nd_sem_without_evaluations'] = Curricular_units_2nd_sem_without_evaluations
+    processed_features_dict['GDP'] = GDP
 
-    # Masukkan nilai kategorikal yang sudah di-encode ke dictionary
-    processed_features_dict['Marital_status'] = marital_status_encoded
-    processed_features_dict['Application_mode'] = application_mode_encoded
-    processed_features_dict['Course'] = course_encoded
-    processed_features_dict['Daytime_evening_attendance'] = daytime_evening_attendance_encoded
-    processed_features_dict['Previous_qualification'] = previous_qualification_encoded
-    processed_features_dict['Mothers_qualification'] = mothers_qualification_encoded
-    processed_features_dict['Fathers_qualification'] = fathers_qualification_encoded
-    processed_features_dict['Mothers_occupation'] = mothers_occupation_encoded
-    processed_features_dict['Fathers_occupation'] = fathers_occupation_encoded
-    processed_features_dict['Displaced'] = displaced_encoded
-    processed_features_dict['Debtor'] = debtor_encoded
-    processed_features_dict['Tuition_fees_up_to_date'] = tuition_fees_encoded
-    processed_features_dict['Gender'] = gender_encoded
-    processed_features_dict['Scholarship_holder'] = scholarship_holder_encoded
+    # Masukkan nilai kategorikal yang sudah di-encode ke dictionary
+    processed_features_dict['Marital_status'] = marital_status_encoded
+    processed_features_dict['Application_mode'] = application_mode_encoded
+    processed_features_dict['Course'] = course_encoded
+    processed_features_dict['Daytime_evening_attendance'] = daytime_evening_attendance_encoded
+    processed_features_dict['Previous_qualification'] = previous_qualification_encoded
+    processed_features_dict['Mothers_qualification'] = mothers_qualification_encoded
+    processed_features_dict['Fathers_qualification'] = fathers_qualification_encoded
+    processed_features_dict['Mothers_occupation'] = mothers_occupation_encoded
+    processed_features_dict['Fathers_occupation'] = fathers_occupation_encoded
+    processed_features_dict['Displaced'] = displaced_encoded
+    processed_features_dict['Debtor'] = debtor_encoded
+    processed_features_dict['Tuition_fees_up_to_date'] = tuition_fees_encoded
+    processed_features_dict['Gender'] = gender_encoded
+    processed_features_dict['Scholarship_holder'] = scholarship_holder_encoded
 
 
-    # Pisahkan data numerik mentah sesuai urutan untuk scaling
-    numerical_cols_in_order_for_scaling = [
-        'Application_order', 'Previous_qualification_grade', 'Age_at_enrollment',
-        'Admission_grade',
-        'Curricular_units_1st_sem_enrolled', 'Curricular_units_1st_sem_evaluations',
-        'Curricular_units_1st_sem_approved', 'Curricular_units_1st_sem_grade',
-        'Curricular_units_1st_sem_without_evaluations',
-        'Curricular_units_2nd_sem_credited', 'Curricular_units_2nd_sem_enrolled',
-        'Curricular_units_2nd_sem_evaluations',
-        'Curricular_units_2nd_sem_approved', 'Curricular_units_2nd_sem_grade',
-        'Curricular_units_2nd_sem_without_evaluations', 'GDP'
-    ]
+    # Pisahkan data numerik mentah sesuai urutan untuk scaling
+    numerical_cols_in_order_for_scaling = [
+        'Application_order', 'Previous_qualification_grade', 'Age_at_enrollment',
+        'Admission_grade',
+        'Curricular_units_1st_sem_enrolled', 'Curricular_units_1st_sem_evaluations',
+        'Curricular_units_1st_sem_approved', 'Curricular_units_1st_sem_grade',
+        'Curricular_units_1st_sem_without_evaluations',
+        'Curricular_units_2nd_sem_credited', 'Curricular_units_2nd_sem_enrolled',
+        'Curricular_units_2nd_sem_evaluations',
+        'Curricular_units_2nd_sem_approved', 'Curricular_units_2nd_sem_grade',
+        'Curricular_units_2nd_sem_without_evaluations', 'GDP'
+    ]
 
-    # Ambil nilai numerik mentah dalam urutan scaling
-    numerical_data_for_scaling_values = [processed_features_dict[col] for col in numerical_cols_in_order_for_scaling]
-    numerical_input_df = pd.DataFrame(
-        np.array(numerical_data_for_scaling_values).reshape(1, -1),
-        columns=numerical_cols_in_order_for_scaling # Tambahkan nama kolom di sini
-    )
-    
-    # Scale numerical data (gunakan DataFrame ini)
-    if scaler is not None:
-        # scaled_numerical_data = scaler.transform(np.array(numerical_data_for_scaling).reshape(1, -1)) # <--- HAPUS BARIS INI
-        scaled_numerical_data = scaler.transform(numerical_input_df) # <--- GANTI DENGAN INI
-    else:
-        # Jika tidak ada scaler, gunakan DataFrame mentah
-        # scaled_numerical_data = np.array(numerical_data_for_scaling).reshape(1, -1) # <--- HAPUS BARIS INI
-        scaled_numerical_data = numerical_input_df # <--- GANTI DENGAN INI
+    # Ambil nilai numerik mentah dalam urutan scaling
+    numerical_data_for_scaling_values = [processed_features_dict[col] for col in numerical_cols_in_order_for_scaling]
+    numerical_input_df = pd.DataFrame(
+        np.array(numerical_data_for_scaling_values).reshape(1, -1),
+        columns=numerical_cols_in_order_for_scaling # Tambahkan nama kolom di sini
+    )
+    
+    # Scale numerical data (gunakan DataFrame ini)
+    if scaler is not None:
+        # scaled_numerical_data = scaler.transform(np.array(numerical_data_for_scaling).reshape(1, -1)) # <--- HAPUS BARIS INI
+        scaled_numerical_data = scaler.transform(numerical_input_df.values) # <--- GANTI DENGAN INI (tambah .values)
+    else:
+        # Jika tidak ada scaler, gunakan DataFrame mentah
+        # scaled_numerical_data = np.array(numerical_data_for_scaling).reshape(1, -1) # <--- HAPUS BARIS INI
+        scaled_numerical_data = numerical_input_df.values # <--- GANTI DENGAN INI (tambah .values)
 
-    # Buat dictionary akhir untuk DataFrame, dengan nilai numerik yang sudah discale dan kategorikal yang di-encode
-    final_features_for_df = {}
-    idx_numerical = 0
-    for col in model_feature_columns:
-        if col in numerical_cols_in_order_for_scaling: # Cek apakah kolom ini numerik
-            final_features_for_df[col] = scaled_numerical_data[0][idx_numerical]
-            idx_numerical += 1
-        else: # Jika bukan numerik, berarti kategorikal, ambil dari dictionary processed_features_dict
-            final_features_for_df[col] = processed_features_dict[col]
+    # Buat dictionary akhir untuk DataFrame, dengan nilai numerik yang sudah discale dan kategorikal yang di-encode
+    final_features_for_df = {}
+    idx_numerical = 0
+    for col in model_feature_columns:
+        if col in numerical_cols_in_order_for_scaling: # Cek apakah kolom ini numerik
+            final_features_for_df[col] = scaled_numerical_data[0][idx_numerical]
+            idx_numerical += 1
+        else: # Jika bukan numerik, berarti kategorikal, ambil dari dictionary processed_features_dict
+            final_features_for_df[col] = processed_features_dict[col]
 
-    input_df = pd.DataFrame([final_features_for_df]) # Buat DataFrame dari dictionary
+    input_df = pd.DataFrame([final_features_for_df]) # Buat DataFrame dari dictionary
 
-    # st.write("Input Data for Model (for debugging):")
-    # st.dataframe(input_df)
+    # st.write("Input Data for Model (for debugging):")
+    # st.dataframe(input_df)
 
-    # --- 6. Make Prediction ---
-    try:
-        prediction = model.predict(input_df) # Gunakan input_df yang sudah benar
-        prediction_proba = model.predict_proba(input_df)
+    # --- 6. Make Prediction ---
+    try:
+        prediction = model.predict(input_df) # Gunakan input_df yang sudah benar
+        prediction_proba = model.predict_proba(input_df)
 
-        st.subheader('Prediction Result:')
-        if prediction[0] == 1: # Asumsi 1 = Dropout, 0 = Tidak Dropout
-            st.warning('The student is predicted to **DROP OUT**')
-        else:
-            st.success('The student is predicted **NOT to DROP OUT**')
+        st.subheader('Prediction Result:')
+        if prediction[0] == 1: # Asumsi 1 = Dropout, 0 = Tidak Dropout
+            st.warning('The student is predicted to **DROP OUT**')
+        else:
+            st.success('The student is predicted **NOT to DROP OUT**')
 
-        st.write(f'Probability of Dropout: **{prediction_proba[0][1]*100:.2f}%**')
-        st.write(f'Probability of Not Dropping Out: **{prediction_proba[0][0]*100:.2f}%**')
+        st.write(f'Probability of Dropout: **{prediction_proba[0][1]*100:.2f}%**')
+        st.write(f'Probability of Not Dropping Out: **{prediction_proba[0][0]*100:.2f}%**')
 
-        st.write("---")
-        st.info("Note: This prediction is probabilistic and should be used as an indicator. Always consider individual circumstances.")
+        st.write("---")
+        st.info("Note: This prediction is probabilistic and should be used as an indicator. Always consider individual circumstances.")
 
-    except Exception as e:
-        st.error(f"An error occurred during prediction: {e}")
-        st.write("Please ensure all inputs are valid and the model is correctly loaded and configured.")
+    except Exception as e:
+        st.error(f"An error occurred during prediction: {e}")
+        st.write("Please ensure all inputs are valid and the model is correctly loaded and configured.")
 
 # --- 7. Optional: Sidebar/Footer Info ---
 st.sidebar.header('About This Application')
-st.sidebar.info('This application is developed as part of a Data Science project to predict student performance at Jaya Jaya Institut.')
+st.sidebar.info('Aplikasi ini dikembangkan sebagai bagian dari proyek Data Science untuk memprediksi performa mahasiswa Jaya Jaya Institut.')
 st.sidebar.write('Developed by Your Name/Team Name') # Replace with your name/team name
