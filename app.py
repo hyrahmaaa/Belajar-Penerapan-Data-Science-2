@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import pickle
 import joblib
-import os # Dibiarkan karena tidak ada salahnya dan mungkin berguna untuk masa depan
+import os
 
 # --- 1. Konfigurasi Halaman Streamlit ---
 st.set_page_config(layout="wide", page_title="Prediksi Performa Mahasiswa")
@@ -227,13 +227,13 @@ with col3:
     Curricular_units_1st_sem_enrolled = st.number_input('1st Sem Units Enrolled', min_value=0, max_value=50, value=0, help="Number of curricular units enrolled in the 1st semester.")
     Curricular_units_1st_sem_evaluations = st.number_input('1st Sem Evaluations', min_value=0, max_value=50, value=0, help="Number of evaluations in the 1st semester.")
     Curricular_units_1st_sem_approved = st.number_input('1st Sem Units Approved', min_value=0, max_value=50, value=0, help="Number of curricular units approved in the 1st semester.")
-    Curricular_units_1st_sem_grade = st.slider('1st Sem Grade', min_value=0.0, max_value=20.0, value=0.0, step=0.1, help="Grade of curricular units in the 1st semester.")
+    Curricular_units_1st_sem_grade = st.number_input('1st Sem Grade', min_value=0.0, max_value=20.0, value=0.0, step=0.1, help="Grade of curricular units in the 1st semester.")
     Curricular_units_1st_sem_without_evaluations = st.number_input('1st Sem Units without Evaluations', min_value=0, max_value=50, value=0, help="Number of curricular units without evaluations in the 1st semester.")
     Curricular_units_2nd_sem_credited = st.number_input('2nd Sem Units Credited', min_value=0, max_value=50, value=0, help="Number of curricular units credited in the 2nd semester.")
     Curricular_units_2nd_sem_enrolled = st.number_input('2nd Sem Units Enrolled', min_value=0, max_value=50, value=0, help="Number of curricular units enrolled in the 2nd semester.")
     Curricular_units_2nd_sem_evaluations = st.number_input('2nd Sem Evaluations', min_value=0, max_value=50, value=0, help="Number of evaluations in the 2nd semester.")
     Curricular_units_2nd_sem_approved = st.number_input('2nd Sem Units Approved', min_value=0, max_value=50, value=0, help="Number of curricular units approved in the 2nd semester.")
-    Curricular_units_2nd_sem_grade = st.slider('2nd Sem Grade', min_value=0.0, max_value=20.0, value=0.0, step=0.1, help="Grade of curricular units in the 2nd semester.")
+    Curricular_units_2nd_sem_grade = st.number_input('2nd Sem Grade', min_value=0.0, max_value=20.0, value=0.0, step=0.1, help="Grade of curricular units in the 2nd semester.")
     Curricular_units_2nd_sem_without_evaluations = st.number_input('2nd Sem Units without Evaluations', min_value=0, max_value=50, value=0, help="Number of curricular units without evaluations in the 2nd semester.")
 
 
