@@ -5,7 +5,7 @@ import pickle
 import joblib
 import os # Dibiarkan karena tidak ada salahnya dan mungkin berguna untuk masa depan
 
-# --- 1. Konfigurasi Halaman Streamlit (HARUS PERTAMA!) ---
+# --- 1. Konfigurasi Halaman Streamlit ---
 st.set_page_config(layout="wide", page_title="Prediksi Performa Mahasiswa")
 
 # --- 2. Judul Aplikasi Streamlit ---
@@ -13,23 +13,19 @@ st.title('Aplikasi Prediksi Performa Mahasiswa Jaya Jaya Institut')
 st.write('Aplikasi ini memprediksi kemungkinan seorang mahasiswa untuk dropout.')
 
 # --- 3. Memuat Model dan Pra-pemrosesan Objects ---
-# Pesan st.success/st.error dipindahkan ke sini setelah st.set_page_config
 try:
     model = joblib.load('student_performance_status.pkl')
-    st.success("Machine Learning Model berhasil dimuat!")
 except Exception as e:
     st.error(f"Error memuat Model ML: {e}. Pastikan 'student_performance_status.pkl' ada di direktori yang benar.")
-    st.stop() # Hentikan aplikasi jika model tidak bisa dimuat
+    st.stop() 
 
 try:
-    scaler = pickle.load(open('scaler.pkl', 'rb')) # Menggunakan pickle.load karena Anda bilang scaler disimpan dengan pickle
-    st.success("Scaler berhasil dimuat!")
+    scaler = pickle.load(open('scaler.pkl', 'rb')) 
 except Exception as e:
     st.warning(f"Peringatan: Gagal memuat scaler: {e}. Jika model Anda memerlukan scaling, ini akan menyebabkan masalah. Pastikan 'scaler.pkl' ada di direktori yang benar.")
-    scaler = None # Set scaler ke None jika gagal dimuat
+    scaler = None 
 
 # --- 4. Definisi Mapping untuk Fitur Kategorikal ---
-# Pastikan mapping ini persis kebalikan dari yang Anda lakukan di notebook
 marital_status_map_rev = {
     'Single': 0, 'Married': 1, 'Widower': 2, 'Divorced': 3, 'Facto Union': 4, 'Legally Separated': 5
 }
@@ -146,7 +142,6 @@ scholarship_holder_map_rev = {'No': 0, 'Yes': 1}
 # --- 5. Input Pengguna (sesuaikan dengan fitur model Anda) ---
 st.header('Masukkan Data Mahasiswa:')
 
-# Menggunakan kolom untuk tata letak yang lebih baik
 col1, col2, col3 = st.columns(3)
 
 with col1:
@@ -245,7 +240,6 @@ with col3:
 # --- 6. Tombol Prediksi ---
 if st.button('Prediksi'):
     # --- 7. Pra-pemrosesan Input untuk Model ---
-    # Encode categorical features
     marital_status_encoded = marital_status_map_rev[Marital_status_display]
     application_mode_encoded = application_mode_map_rev[Application_mode_display]
     course_encoded = course_map_rev[Course_display]
@@ -261,9 +255,6 @@ if st.button('Prediksi'):
     gender_encoded = gender_map_rev[Gender_display]
     scholarship_holder_encoded = scholarship_holder_map_rev[Scholarship_holder_display]
 
-    # Define the exact order of features your model expects
-    # YOU MUST REPLACE THIS LIST WITH THE ACTUAL COLUMN NAMES AND THEIR EXACT ORDER FROM YOUR X_train_scaled.columns.tolist()
-    # THIS IS THE MOST CRITICAL PART FOR YOUR MODEL TO WORK CORRECTLY.
     model_feature_columns = ['Marital_status', 'Application_mode', 'Application_order', 'Course',
                              'Daytime_evening_attendance', 'Previous_qualification', 'Previous_qualification_grade',
                              'Mothers_qualification', 'Fathers_qualification', 'Mothers_occupation',
@@ -276,10 +267,8 @@ if st.button('Prediksi'):
                              'Curricular_units_2nd_sem_approved', 'Curricular_units_2nd_sem_grade',
                              'Curricular_units_2nd_sem_without_evaluations', 'GDP']
 
-    # --- Cara yang lebih aman untuk membangun input_df agar urutannya cocok dengan model_feature_columns ---
     processed_features_dict = {}
 
-    # Masukkan nilai numerik mentah ke dictionary
     processed_features_dict['Application_order'] = Application_order
     processed_features_dict['Previous_qualification_grade'] = Previous_qualification_grade
     processed_features_dict['Age_at_enrollment'] = Age_at_enrollment
@@ -297,7 +286,6 @@ if st.button('Prediksi'):
     processed_features_dict['Curricular_units_2nd_sem_without_evaluations'] = Curricular_units_2nd_sem_without_evaluations
     processed_features_dict['GDP'] = GDP
 
-    # Masukkan nilai kategorikal yang sudah di-encode ke dictionary
     processed_features_dict['Marital_status'] = marital_status_encoded
     processed_features_dict['Application_mode'] = application_mode_encoded
     processed_features_dict['Course'] = course_encoded
@@ -313,8 +301,6 @@ if st.button('Prediksi'):
     processed_features_dict['Gender'] = gender_encoded
     processed_features_dict['Scholarship_holder'] = scholarship_holder_encoded
 
-
-    # Pisahkan data numerik mentah sesuai urutan untuk scaling
     numerical_cols_in_order_for_scaling = ['Marital_status', 'Application_mode', 'Application_order', 'Course',
                              'Daytime_evening_attendance', 'Previous_qualification', 'Previous_qualification_grade',
                              'Mothers_qualification', 'Fathers_qualification', 'Mothers_occupation',
@@ -327,38 +313,36 @@ if st.button('Prediksi'):
                              'Curricular_units_2nd_sem_approved', 'Curricular_units_2nd_sem_grade',
                              'Curricular_units_2nd_sem_without_evaluations', 'GDP']
 
-    # Ambil nilai numerik mentah dalam urutan scaling
     numerical_data_for_scaling_values = [processed_features_dict[col] for col in numerical_cols_in_order_for_scaling]
     numerical_input_df = pd.DataFrame(
         np.array(numerical_data_for_scaling_values).reshape(1, -1),
-        columns=numerical_cols_in_order_for_scaling # Tambahkan nama kolom di sini
+        columns=numerical_cols_in_order_for_scaling 
     )
     
-    # Scale numerical data (gunakan DataFrame ini)
     if scaler is not None:
-        scaled_numerical_data = scaler.transform(numerical_input_df.values) # <-- GANTI DENGAN INI (tambah .values)
+        scaled_numerical_data = scaler.transform(numerical_input_df.values) 
     else:
-        scaled_numerical_data = numerical_input_df.values # <-- GANTI DENGAN INI (tambah .values)
+        scaled_numerical_data = numerical_input_df.values 
 
-    # Buat dictionary akhir untuk DataFrame, dengan nilai numerik yang sudah discale dan kategorikal yang di-encode
+    
     final_features_for_df = {}
     idx_numerical = 0
     for col in model_feature_columns:
-        if col in numerical_cols_in_order_for_scaling: # Cek apakah kolom ini numerik
+        if col in numerical_cols_in_order_for_scaling: 
             final_features_for_df[col] = scaled_numerical_data[0][idx_numerical]
             idx_numerical += 1
-        else: # Jika bukan numerik, berarti kategorikal, ambil dari dictionary processed_features_dict
+        else: 
             final_features_for_df[col] = processed_features_dict[col]
 
-    input_df = pd.DataFrame([final_features_for_df]) # Buat DataFrame dari dictionary
+    input_df = pd.DataFrame([final_features_for_df]) 
 
     # --- 7. Make Prediction ---
     try:
-        prediction = model.predict(input_df) # Gunakan input_df yang sudah benar
+        prediction = model.predict(input_df)
         prediction_proba = model.predict_proba(input_df)
 
         st.subheader('Prediction Result:')
-        if prediction[0] == 1: # Asumsi 1 = Dropout, 0 = Tidak Dropout
+        if prediction[0] == 1: 
             st.warning('The student is predicted to **DROP OUT**')
         else:
             st.success('The student is predicted **NOT to DROP OUT**')
@@ -376,4 +360,4 @@ if st.button('Prediksi'):
 # --- 8. Optional: Sidebar/Footer Info ---
 st.sidebar.header('About This Application')
 st.sidebar.info('Aplikasi ini dikembangkan sebagai bagian dari proyek Data Science untuk memprediksi performa mahasiswa Jaya Jaya Institut.')
-st.sidebar.write('Developed by Your Name/Team Name') # Replace with your name/team name
+st.sidebar.write('Developed by Rahayunr') 
