@@ -6,7 +6,7 @@ import joblib
 
 # --- 1. Load Model and Pre-processing Objects ---
 try:
-    model = joblib.load(open('student_performance_status.pkl', 'rb')) # <-- GANTI DARI pickle.load MENJADI joblib.load
+    model = joblib.load('student_performance_status.pkl')
     st.success("Machine Learning Model loaded successfully!")
 except Exception as e:
     st.error(f"Error loading ML Model: {e}. Make sure 'student_performance_status.pkl' is in the correct directory.")
