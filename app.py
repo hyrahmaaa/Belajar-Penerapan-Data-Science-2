@@ -328,17 +328,7 @@ if st.button('Prediksi'):
         np.array(numerical_data_for_scaling_values).reshape(1, -1),
         columns=numerical_cols_in_order_for_scaling # Tambahkan nama kolom di sini
     )
-    st.header("DEBUGGING NUMERICAL DATA")
-    st.write("processed_features_dict (Numerik):")
-    # Filter dictionary untuk hanya menampilkan yang numerik untuk memudahkan cek
-    filtered_numeric_dict = {k: v for k, v in processed_features_dict.items() if k in numerical_cols_in_order_for_scaling}
-    st.json(filtered_numeric_dict) # Gunakan st.json untuk tampilan lebih rapi
-    st.write(f"Length of numerical_data_for_scaling: {len(numerical_data_for_scaling)}")
-    st.write(f"Contents of numerical_data_for_scaling: {numerical_data_for_scaling}")
-    st.write("Expected numerical columns (from code):")
-    st.json(numerical_cols_in_order_for_scaling)
-    st.write("---")
-
+    
     # Scale numerical data (gunakan DataFrame ini)
     if scaler is not None:
         # scaled_numerical_data = scaler.transform(np.array(numerical_data_for_scaling).reshape(1, -1)) # <--- HAPUS BARIS INI
