@@ -5,32 +5,6 @@ import numpy as np
 import pickle
 import joblib
 
-# --- DEBUGGING SEMENTARA ---
-st.header("Debugging File Check") # Judul di Streamlit app
-current_dir = os.getcwd()
-st.write(f"Current working directory: `{current_dir}`") # Untuk melihat direktori kerja
-
-try:
-    files_in_dir = os.listdir('.')
-    st.write(f"Files in directory ('.'): `{files_in_dir}`") # Untuk melihat file apa saja yang ada
-    if 'student_performance_status.pkl' in files_in_dir:
-        st.success("student_performance_status.pkl FOUND in directory listing.")
-        try:
-            file_size = os.path.getsize('student_performance_status.pkl')
-            st.write(f"File size of student_performance_status.pkl: `{file_size} bytes`")
-            if file_size == 0:
-                st.error("WARNING: student_performance_status.pkl has 0 bytes! It's likely corrupted.")
-            elif file_size < 1000: # Assuming models are usually larger than 1KB
-                st.warning("WARNING: student_performance_status.pkl seems very small. Might be corrupted.")
-        except Exception as size_e:
-            st.error(f"Error getting file size: {size_e}")
-    else:
-        st.error("student_performance_status.pkl NOT FOUND in directory listing!")
-except Exception as listdir_e:
-    st.error(f"Error listing directory: {listdir_e}")
-st.write("---")
-# --- END DEBUGGING ---
-
 # --- 1. Load Model and Pre-processing Objects ---
 try:
     model = joblib.load('student_performance_status.pkl')
