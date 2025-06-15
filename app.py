@@ -163,47 +163,19 @@ with col1:
     Fathers_qualification_display = st.selectbox("Father's Qualification",list(fathers_qualification_map_rev.keys()),help="Select the highest academic qualification of the student's father.")
 
 with col2:
-    Mothers_occupation_display = st.selectbox(
-        "Mother's Occupation",
-        list(mothers_occupation_map_rev.keys()),
-        help="Select the occupation of the student's mother."
-    )
+    Mothers_occupation_display = st.selectbox("Mother's Occupation",list(mothers_occupation_map_rev.keys()),help="Select the occupation of the student's mother.")
 
-    Fathers_occupation_display = st.selectbox(
-        "Father's Occupation",
-        list(fathers_occupation_map_rev.keys()),
-        help="Select the occupation of the student's father."
-    )
+    Fathers_occupation_display = st.selectbox("Father's Occupation",list(fathers_occupation_map_rev.keys()),help="Select the occupation of the student's father.")
 
-    Displaced_display = st.radio(
-        'Displaced Student',
-        list(displaced_map_rev.keys()),
-        help="Is the student displaced (e.g., moved due to external factors)?"
-    )
+    Displaced_display = st.radio('Displaced Student',list(displaced_map_rev.keys()),help="Is the student displaced (e.g., moved due to external factors)?")
 
-    Debtor_display = st.radio(
-        'Debtor Status',
-        list(debtor_map_rev.keys()),
-        help="Is the student a debtor (i.e., has outstanding debts)?"
-    )
+    Debtor_display = st.radio('Debtor Status',list(debtor_map_rev.keys()),help="Is the student a debtor (i.e., has outstanding debts)?")
     
-    Tuition_fees_up_to_date_display = st.radio(
-        'Tuition Fees Up-to-Date',
-        list(tuition_fees_map_rev.keys()),
-        help="Is the student's tuition fee payment up-to-date?"
-    )
+    Tuition_fees_up_to_date_display = st.radio('Tuition Fees Up-to-Date',list(tuition_fees_map_rev.keys()),help="Is the student's tuition fee payment up-to-date?")
 
-    Gender_display = st.selectbox(
-        'Gender',
-        list(gender_map_rev.keys()),
-        help="Select the student's gender."
-    )
+    Gender_display = st.selectbox('Gender',list(gender_map_rev.keys()),help="Select the student's gender.")
 
-    Scholarship_holder_display = st.radio(
-        'Scholarship Holder',
-        list(scholarship_holder_map_rev.keys()),
-        help="Is the student a scholarship holder?"
-    )
+    Scholarship_holder_display = st.radio('Scholarship Holder',list(scholarship_holder_map_rev.keys()),help="Is the student a scholarship holder?")
 
 with col3:
     Age_at_enrollment = st.number_input('Age at Enrollment', min_value=17, max_value=80, value=20, help="Student's age when first enrolling.")
