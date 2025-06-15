@@ -220,20 +220,20 @@ with col2:
 
 with col3:
     Age_at_enrollment = st.number_input('Age at Enrollment', min_value=17, max_value=80, value=20, help="Student's age when first enrolling.")
-    Admission_grade = st.number_input('Admission Grade Average', min_value=0.0, max_value=200.0, value=100.0, help="Average grade from admission exams/criteria.")
-    Previous_qualification_grade = st.number_input('Previous Qualification Grade Average', min_value=0.0, max_value=200.0, value=100.0, help="Average grade from previous academic qualification.")
-    GDP = st.number_input('GDP per capita (year of enrollment)', min_value=-10.0, max_value=20.0, value=0.0, format="%.2f", help="Gross Domestic Product per capita of the student's origin country at enrollment year.")
-    Application_order = st.number_input('Application Order', min_value=1, max_value=10, value=1, help="Order of the student's application (e.g., 1st, 2nd, etc.).")
-    Curricular_units_1st_sem_enrolled = st.number_input('1st Sem Units Enrolled', min_value=0, max_value=50, value=6, help="Number of curricular units enrolled in the 1st semester.")
-    Curricular_units_1st_sem_evaluations = st.number_input('1st Sem Evaluations', min_value=0, max_value=50, value=7, help="Number of evaluations in the 1st semester.")
-    Curricular_units_1st_sem_approved = st.number_input('1st Sem Units Approved', min_value=0, max_value=50, value=6, help="Number of curricular units approved in the 1st semester.")
-    Curricular_units_1st_sem_grade = st.slider('1st Sem Grade Average', min_value=0.0, max_value=20.0, value=10.0, step=0.1, help="Average grade of curricular units in the 1st semester.")
+    Admission_grade = st.number_input('Admission Grade Average', min_value=0.0, max_value=200.0, value=127.0, help="Average grade from admission exams/criteria.")
+    Previous_qualification_grade = st.number_input('Previous Qualification Grade Average', min_value=0.0, max_value=200.0, value=122.0, help="Average grade from previous academic qualification.")
+    GDP = st.number_input('GDP per capita (year of enrollment)', min_value=-10.0, max_value=20.0, value=1.0, format="%.2f", help="Gross Domestic Product per capita of the student's origin country at enrollment year.")
+    Application_order = st.number_input('Application Order', min_value=1, max_value=10, value=5, help="Order of the student's application (e.g., 1st, 2nd, etc.).")
+    Curricular_units_1st_sem_enrolled = st.number_input('1st Sem Units Enrolled', min_value=0, max_value=50, value=0, help="Number of curricular units enrolled in the 1st semester.")
+    Curricular_units_1st_sem_evaluations = st.number_input('1st Sem Evaluations', min_value=0, max_value=50, value=0, help="Number of evaluations in the 1st semester.")
+    Curricular_units_1st_sem_approved = st.number_input('1st Sem Units Approved', min_value=0, max_value=50, value=0, help="Number of curricular units approved in the 1st semester.")
+    Curricular_units_1st_sem_grade = st.slider('1st Sem Grade Average', min_value=0.0, max_value=20.0, value=0.0, step=0.1, help="Average grade of curricular units in the 1st semester.")
     Curricular_units_1st_sem_without_evaluations = st.number_input('1st Sem Units without Evaluations', min_value=0, max_value=50, value=0, help="Number of curricular units without evaluations in the 1st semester.")
     Curricular_units_2nd_sem_credited = st.number_input('2nd Sem Units Credited', min_value=0, max_value=50, value=0, help="Number of curricular units credited in the 2nd semester.")
-    Curricular_units_2nd_sem_enrolled = st.number_input('2nd Sem Units Enrolled', min_value=0, max_value=50, value=6, help="Number of curricular units enrolled in the 2nd semester.")
-    Curricular_units_2nd_sem_evaluations = st.number_input('2nd Sem Evaluations', min_value=0, max_value=50, value=7, help="Number of evaluations in the 2nd semester.")
-    Curricular_units_2nd_sem_approved = st.number_input('2nd Sem Units Approved', min_value=0, max_value=50, value=6, help="Number of curricular units approved in the 2nd semester.")
-    Curricular_units_2nd_sem_grade = st.slider('2nd Sem Grade Average', min_value=0.0, max_value=20.0, value=10.0, step=0.1, help="Average grade of curricular units in the 2nd semester.")
+    Curricular_units_2nd_sem_enrolled = st.number_input('2nd Sem Units Enrolled', min_value=0, max_value=50, value=0, help="Number of curricular units enrolled in the 2nd semester.")
+    Curricular_units_2nd_sem_evaluations = st.number_input('2nd Sem Evaluations', min_value=0, max_value=50, value=0, help="Number of evaluations in the 2nd semester.")
+    Curricular_units_2nd_sem_approved = st.number_input('2nd Sem Units Approved', min_value=0, max_value=50, value=0, help="Number of curricular units approved in the 2nd semester.")
+    Curricular_units_2nd_sem_grade = st.slider('2nd Sem Grade Average', min_value=0.0, max_value=20.0, value=0.0, step=0.1, help="Average grade of curricular units in the 2nd semester.")
     Curricular_units_2nd_sem_without_evaluations = st.number_input('2nd Sem Units without Evaluations', min_value=0, max_value=50, value=0, help="Number of curricular units without evaluations in the 2nd semester.")
 
 
@@ -353,9 +353,9 @@ if st.button('Prediksi'):
 
         st.subheader('Prediction Result:')
         if prediction[0] == 1: # Asumsi 1 = Dropout, 0 = Tidak Dropout
-            st.warning('The student is predicted to **DROP OUT** 😢')
+            st.warning('The student is predicted to **DROP OUT**')
         else:
-            st.success('The student is predicted **NOT to DROP OUT** 🎉')
+            st.success('The student is predicted **NOT to DROP OUT**')
 
         st.write(f'Probability of Dropout: **{prediction_proba[0][1]*100:.2f}%**')
         st.write(f'Probability of Not Dropping Out: **{prediction_proba[0][0]*100:.2f}%**')
