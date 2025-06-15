@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 import pickle
 import joblib
-import os
 
 # --- 1. Konfigurasi Halaman Streamlit ---
 st.set_page_config(layout="wide", page_title="Prediksi Performa Mahasiswa")
