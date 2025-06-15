@@ -312,7 +312,7 @@ if st.button('Prediksi'):
     # Pisahkan data numerik mentah sesuai urutan untuk scaling
     numerical_cols_in_order_for_scaling = [
         'Application_order', 'Previous_qualification_grade', 'Age_at_enrollment',
-        'Admission_grade', # Pastikan Admission_grade ada di sini juga jika discale
+        'Admission_grade',
         'Curricular_units_1st_sem_enrolled', 'Curricular_units_1st_sem_evaluations',
         'Curricular_units_1st_sem_approved', 'Curricular_units_1st_sem_grade',
         'Curricular_units_1st_sem_without_evaluations',
@@ -323,8 +323,11 @@ if st.button('Prediksi'):
     ]
 
     # Ambil nilai numerik mentah dalam urutan scaling
-    numerical_data_for_scaling = [processed_features_dict[col] for col in numerical_cols_in_order_for_scaling]
-
+    numerical_data_for_scaling_values = [processed_features_dict[col] for col in numerical_cols_in_order_for_scaling]
+    numerical_input_df = pd.DataFrame(
+        np.array(numerical_data_for_scaling_values).reshape(1, -1),
+        columns=numerical_cols_in_order_for_scaling # Tambahkan nama kolom di sini
+    )
     st.header("DEBUGGING NUMERICAL DATA")
     st.write("processed_features_dict (Numerik):")
     # Filter dictionary untuk hanya menampilkan yang numerik untuk memudahkan cek
@@ -336,11 +339,14 @@ if st.button('Prediksi'):
     st.json(numerical_cols_in_order_for_scaling)
     st.write("---")
 
-    # Scale numerical data
+    # Scale numerical data (gunakan DataFrame ini)
     if scaler is not None:
-        scaled_numerical_data = scaler.transform(np.array(numerical_data_for_scaling).reshape(1, -1))
+        # scaled_numerical_data = scaler.transform(np.array(numerical_data_for_scaling).reshape(1, -1)) # <--- HAPUS BARIS INI
+        scaled_numerical_data = scaler.transform(numerical_input_df) # <--- GANTI DENGAN INI
     else:
-        scaled_numerical_data = np.array(numerical_data_for_scaling).reshape(1, -1)
+        # Jika tidak ada scaler, gunakan DataFrame mentah
+        # scaled_numerical_data = np.array(numerical_data_for_scaling).reshape(1, -1) # <--- HAPUS BARIS INI
+        scaled_numerical_data = numerical_input_df # <--- GANTI DENGAN INI
 
     # Buat dictionary akhir untuk DataFrame, dengan nilai numerik yang sudah discale dan kategorikal yang di-encode
     final_features_for_df = {}
