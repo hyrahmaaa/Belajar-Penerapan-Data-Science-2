@@ -163,7 +163,7 @@ with col1:
     Fathers_qualification_display = st.selectbox("Father's Qualification",list(fathers_qualification_map_rev.keys()),help="Select the highest academic qualification of the student's father.")
 
 with col2:
-    Mothers_occupation_display = st.selectbox("Mother's Occupation",list(mothers_occupation_map_rev.keys()),help="Select the occupation of the student's mother.")
+    Mothers_occupation_display = st.selectbox("Mother's Occupation",list(mothers_occupation_map_rev.keys()),help="Select the occupation of the student's mother.")
 
     Fathers_occupation_display = st.selectbox("Father's Occupation",list(fathers_occupation_map_rev.keys()),help="Select the occupation of the student's father.")
 
