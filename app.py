@@ -5,7 +5,12 @@ import numpy as np
 import pickle
 import joblib
 
-# --- 1. Load Model and Pre-processing Objects ---
+# --- 1. Judul Aplikasi Streamlit ---
+st.set_page_config(layout="wide")
+st.title('Aplikasi Prediksi Performa Mahasiswa Jaya Jaya Institut')
+st.write('Aplikasi ini memprediksi kemungkinan seorang mahasiswa untuk dropout.')
+
+# --- 2. Load Model and Pre-processing Objects ---
 try:
     model = joblib.load('student_performance_status.pkl')
     st.success("Machine Learning Model loaded successfully!")
@@ -134,12 +139,6 @@ debtor_map_rev = {'No': 0, 'Yes': 1}
 tuition_fees_map_rev = {'No': 0, 'Yes': 1}
 gender_map_rev = {'Female': 0, 'Male': 1}
 scholarship_holder_map_rev = {'No': 0, 'Yes': 1}
-
-
-# --- 2. Judul Aplikasi Streamlit ---
-st.set_page_config(layout="wide")
-st.title('Aplikasi Prediksi Performa Mahasiswa Jaya Jaya Institut')
-st.write('Aplikasi ini memprediksi kemungkinan seorang mahasiswa untuk dropout.')
 
 # --- 3. Input Pengguna (sesuaikan dengan fitur model Anda) ---
 st.header('Masukkan Data Mahasiswa:')
