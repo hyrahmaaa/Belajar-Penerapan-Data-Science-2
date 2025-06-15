@@ -13,14 +13,12 @@ st.write('Aplikasi ini memprediksi kemungkinan seorang mahasiswa untuk dropout.'
 # --- 2. Load Model and Pre-processing Objects ---
 try:
     model = joblib.load('student_performance_status.pkl')
-    st.success("Machine Learning Model loaded successfully!")
 except Exception as e:
     st.error(f"Error loading ML Model: {e}. Make sure 'student_performance_status.pkl' is in the correct directory.")
     st.stop()
 
 try:
     scaler = pickle.load(open('scaler.pkl', 'rb'))
-    st.success("Scaler loaded successfully!")
 except Exception as e:
     st.warning(f"Warning: Failed to load scaler: {e}. If your model requires numerical scaling, this will cause issues. Make sure 'scaler.pkl' is in the correct directory.")
     scaler = None # Set scaler to None if loading fails
